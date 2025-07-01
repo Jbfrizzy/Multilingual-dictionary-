@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Dictionary</title>
+  <style>
+    body {
+      font-family: Arial;
+      background-color: #f9f9f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .box {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      text-align: center;
+      width: 90%;
+      max-width: 400px;
+    }
+
+    select, input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 16px;
+    }
+
+    button {
+      background-color: navy;
+      color: white;
+      padding: 10px;
+      border: none;
+      width: 100%;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #result {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h2 style="color: navy;">My Dictionary</h2>
+    <select id="language">
+      <option value="yoruba">Yoruba</option>
+      <option value="igbo">Igbo</option>
+      <option value="pidgin">Pidgin</option>
+      <option value="french">French</option>
+      <option value="spanish">Spanish</option>
+    </select>
+
+    <input type="text" id="wordInput" placeholder="Enter English word" />
+
+    <button onclick="translateWord()">Translate</button>
+
+    <p id="result"></p>
+  </div>
+
+  <script>
+    const dictionary = {
+  house: { yoruba: "ilé", igbo: "ụlọ", pidgin: "house", french: "maison", spanish: "casa" },
+  food: { yoruba: "ounje", igbo: "nri", pidgin: "chop", french: "nourriture", spanish: "comida" },
+  water: { yoruba: "omi", igbo: "mmiri", pidgin: "water", french: "eau", spanish: "agua" },
+  school: { yoruba: "ile-iwe", igbo: "ụlọ akwụkwọ", pidgin: "school", french: "école", spanish: "escuela" },
+  book: { yoruba: "iwe", igbo: "akwukwo", pidgin: "book", french: "livre", spanish: "libro" },
+  love: { yoruba: "ife", igbo: "ifunanya", pidgin: "love", french: "amour", spanish: "amor" },
+  sun: { yoruba: "oorun", igbo: "anyanwụ", pidgin: "sun", french: "soleil", spanish: "sol" },
+  man: { yoruba: "okunrin", igbo: "nwoke", pidgin: "man", french: "homme", spanish: "hombre" },
+  woman: { yoruba: "obinrin", igbo: "nwanyị", pidgin: "woman", french: "femme", spanish: "mujer" },
+  eat: { yoruba: "jẹun", igbo: "rie", pidgin: "chop", french: "manger", spanish: "comer" },
+  shoe: { yoruba: "bata", igbo: "akpụ", pidgin: "shoe", french: "chaussure", spanish: "zapato" },
+  read: { yoruba: "kawe", igbo: "gụ", pidgin: "read", french: "lire", spanish: "leer" },
+  cloth: { yoruba: "aso", igbo: "uwe", pidgin: "cloth", french: "vêtement", spanish: "ropa" },
+  city: { yoruba: "ilu", igbo: "obodo", pidgin: "town", french: "ville", spanish: "ciudad" },
+  drum: { yoruba: "ilu", igbo: "igba", pidgin: "drum", french: "tambour", spanish: "tambor" },
+  shop: { yoruba: "ọja", igbo: "ahịa", pidgin: "market", french: "magasin", spanish: "tienda" },
+  spoon: { yoruba: "ikorita", igbo: "ngaji", pidgin: "spoon", french: "cuillère", spanish: "cuchara" },
+  biro: { yoruba: "kalamu", igbo: "pen", pidgin: "biro", french: "stylo", spanish: "bolígrafo" },
+  tree: { yoruba: "igi", igbo: "osisi", pidgin: "tree", french: "arbre", spanish: "árbol" },
+  land: { yoruba: "ile", igbo: "ala", pidgin: "land", french: "terre", spanish: "tierra" },
+  air: { yoruba: "afẹfẹ", igbo: "ikuku", pidgin: "air", french: "air", spanish: "aire" },
+  hair: { yoruba: "irun", igbo: "ntutu", pidgin: "hair", french: "cheveux", spanish: "pelo" },
+  eyes: { yoruba: "oju", igbo: "anya", pidgin: "eye", french: "yeux", spanish: "ojos" },
+  "human being": { yoruba: "eniyan", igbo: "mmadu", pidgin: "person", french: "humain", spanish: "humano" },
+  speak: { yoruba: "sọ", igbo: "kwuo", pidgin: "talk", french: "parler", spanish: "hablar" },
+  church: { yoruba: "ijọ", igbo: "ụka", pidgin: "church", french: "église", spanish: "iglesia" },
+  mosque: { yoruba: "masalasi", igbo: "ụlọ ekpere musulumi", pidgin: "mosque", french: "mosquée", spanish: "mezquita" },
+  sing: { yoruba: "kọrin", igbo: "abu", pidgin: "sing", french: "chanter", spanish: "cantar" },
+  song: { yoruba: "orin", igbo: "abụ", pidgin: "song", french: "chanson", spanish: "canción" },
+  write: { yoruba: "kọ", igbo: "dee", pidgin: "write", french: "écrire", spanish: "escribir" },
+  sleep: { yoruba: "sun", igbo: "ūra", pidgin: "sleep", french: "dormir", spanish: "dormir" },
+  "wake up": { yoruba: "ji", igbo: "tetawanye", pidgin: "wake", french: "réveiller", spanish: "despertar" },
+  death: { yoruba: "iku", igbo: "onwu", pidgin: "death", french: "mort", spanish: "muerte" },
+  dead: { yoruba: "oku", igbo: "nwuru anwu", pidgin: "dead", french: "mort", spanish: "muerto" },
+  leave: { yoruba: "lọ", igbo: "hapụ", pidgin: "go", french: "quitter", spanish: "salir" },
+  i: { yoruba: "emi", igbo: "m", pidgin: "me", french: "je", spanish: "yo" },
+  a: { yoruba: "kan", igbo: "otu", pidgin: "a", french: "un/une", spanish: "un/una" },
+  and: { yoruba: "ati", igbo: "na", pidgin: "and", french: "et", spanish: "y" },
+  people: { yoruba: "awọn eniyan", igbo: "ndị mmadụ", pidgin: "people", french: "les gens", spanish: "gente" },
+  market: { yoruba: "ọja", igbo: "ahịa", pidgin: "market", french: "marché", spanish: "mercado" },
+  chair: { yoruba: "aga", igbo: "oche", pidgin: "chair", french: "chaise", spanish: "silla" },
+  table: { yoruba: "tabili", igbo: "tụrụ", pidgin: "table", french: "table", spanish: "mesa" },
+  phone: { yoruba: "foonu", igbo: "ekwentị", pidgin: "phone", french: "téléphone", spanish: "teléfono" },
+  tree: { yoruba: "igi", igbo: "osisi", pidgin: "tree", french: "arbre", spanish: "árbol" },
+  land: { yoruba: "ilẹ", igbo: "ala", pidgin: "land", french: "terre", spanish: "tierra" },
+  air: { yoruba: "afẹfẹ", igbo: "ikuku", pidgin: "air", french: "air", spanish: "aire" },
+  car: { yoruba: "ọkọ ayọkẹlẹ", igbo: "ụgbọ ala", pidgin: "motor", french: "voiture", spanish: "coche" },
+  road: { yoruba: "ọna", igbo: "ụzọ", pidgin: "road", french: "route", spanish: "camino" },
+  eat: { yoruba: "jẹun", igbo: "rie", pidgin: "chop", french: "manger", spanish: "comer" },
+  drink: { yoruba: "mu", igbo: "ṅu", pidgin: "drink", french: "boire", spanish: "beber" },
+  sleep: { yoruba: "sun", igbo: "ụra", pidgin: "sleep", french: "dormir", spanish: "dormir" },
+  wake: { yoruba: "ji", igbo: "mụọ", pidgin: "wake", french: "se réveiller", spanish: "despertar" },
+  read: { yoruba: "ka", igbo: "gụ", pidgin: "read", french: "lire", spanish: "leer" },
+  write: { yoruba: "kọ", igbo: "dee", pidgin: "write", french: "écrire", spanish: "escribir" },
+  walk: { yoruba: "rin", igbo: "ga ije", pidgin: "waka", french: "marcher", spanish: "caminar" },
+  run: { yoruba: "sa", igbo: "gba ọsọ", pidgin: "run", french: "courir", spanish: "correr" },
+  talk: { yoruba: "sọrọ", igbo: "kwuo", pidgin: "talk", french: "parler", spanish: "hablar" },
+  listen: { yoruba: "gbọ", igbo: "nụ", pidgin: "hear", french: "écouter", spanish: "escuchar" },
+  sit: { yoruba: "joko", igbo: "nọdụ ala", pidgin: "sidon", french: "s'asseoir", spanish: "sentarse" },
+  stand: { yoruba: "dide", igbo: "guzo", pidgin: "stand", french: "se tenir", spanish: "pararse" },
+  cook: { yoruba: "se ounje", igbo: "sie nri", pidgin: "cook", french: "cuisiner", spanish: "cocinar" },
+  wash: { yoruba: "fo", igbo: "sa", pidgin: "wash", french: "laver", spanish: "lavar" },
+  bath: { yoruba: "wẹ", igbo: "sa ahụ", pidgin: "bath", french: "se baigner", spanish: "bañarse" },
+  love: { yoruba: "ifẹ", igbo: "ịhụnanya", pidgin: "love", french: "amour", spanish: "amor" },
+  hate: { yoruba: "ikorira", igbo: "ịkpọasị", pidgin: "hate", french: "haïr", spanish: "odiar" },
+  happy: { yoruba: "ayọ", igbo: "anụrị", pidgin: "happy", french: "heureux", spanish: "feliz" },
+  sad: { yoruba: "ibanuje", igbo: "nwute", pidgin: "sad", french: "triste", spanish: "triste" },
+  cry: { yoruba: "kẹ", igbo: "kua", pidgin: "cry", french: "pleurer", spanish: "llorar" },
+  laugh: { yoruba: "rẹrìn-ín", igbo: "ọchị", pidgin: "laugh", french: "rire", spanish: "reír" },
+  angry: { yoruba: "binu", igbo: "iwe", pidgin: "vex", french: "fâché", spanish: "enojado" },
+  death: { yoruba: "iku", igbo: "onwu", pidgin: "death", french: "mort", spanish: "muerte" },
+  dead: { yoruba: "okú", igbo: "nwuru anwụ", pidgin: "dead", french: "mort", spanish: "muerto" },
+  live: { yoruba: "ye", igbo: "nọ ndụ", pidgin: "live", french: "vivre", spanish: "vivir" },
+  leave: { yoruba: "lọ", igbo: "hapụ", pidgin: "comot", french: "partir", spanish: "salir" },
+  stay: { yoruba: "duro", igbo: "nọ", pidgin: "stay", french: "rester", spanish: "quedarse" },
+  go: { yoruba: "lọ", igbo: "ga", pidgin: "go", french: "aller", spanish: "ir" },
+  come: { yoruba: "wa", igbo: "bia", pidgin: "come", french: "venir", spanish: "venir" },
+  see: { yoruba: "ri", igbo: "hu", pidgin: "see", french: "voir", spanish: "ver" },
+  look: { yoruba: "wo", igbo: "lelee", pidgin: "look", french: "regarder", spanish: "mirar" },
+  hear: { yoruba: "gbọ", igbo: "nụ", pidgin: "hear", french: "entendre", spanish: "oír" },
+  understand: { yoruba: "ye", igbo: "ghọta", pidgin: "understand", french: "comprendre", spanish: "entender" },
+  speak: { yoruba: "sọ", igbo: "kwuo", pidgin: "talk", french: "parler", spanish: "hablar" },
+  sing: { yoruba: "kọrin", igbo: "abu", pidgin: "sing", french: "chanter", spanish: "cantar" },
+  song: { yoruba: "orin", igbo: "abụ", pidgin: "song", french: "chanson", spanish: "canción" },
+  music: { yoruba: "orin", igbo: "egwu", pidgin: "music", french: "musique", spanish: "música" },
+  drum: { yoruba: "ilu", igbo: "ekwe", pidgin: "drum", french: "tambour", spanish: "tambor" },
+  shoe: { yoruba: "bàtà", igbo: "akwa ụkwụ", pidgin: "shoe", french: "chaussure", spanish: "zapato" },
+  cloth: { yoruba: "aṣọ", igbo: "akwa", pidgin: "cloth", french: "vêtement", spanish: "ropa" },
+  hair: { yoruba: "irun", igbo: "ntutu", pidgin: "hair", french: "cheveux", spanish: "cabello" },
+  eyes: { yoruba: "oju", igbo: "anya", pidgin: "eye", french: "yeux", spanish: "ojos" },
+  nose: { yoruba: "imu", igbo: "imi", pidgin: "nose", french: "nez", spanish: "nariz" },
+  mouth: { yoruba: "ẹnu", igbo: "ọnụ", pidgin: "mouth", french: "bouche", spanish: "boca" },
+  hand: { yoruba: "ọwọ", igbo: "aka", pidgin: "hand", french: "main", spanish: "mano" },
+  leg: { yoruba: "ẹsẹ", igbo: "ụkwụ", pidgin: "leg", french: "jambe", spanish: "pierna" },
+  head: { yoruba: "ori", igbo: "isi", pidgin: "head", french: "tête", spanish: "cabeza" },
+  body: { yoruba: "ara", igbo: "ahu", pidgin: "body", french: "corps", spanish: "cuerpo" },
+  name: { yoruba: "orukọ", igbo: "aha", pidgin: "name", french: "nom", spanish: "nombre" },
+  time: { yoruba: "akoko", igbo: "oge", pidgin: "time", french: "temps", spanish: "tiempo" },
+  day: { yoruba: "ọjọ", igbo: "ụbọchị", pidgin: "day", french: "jour", spanish: "día" },
+  night: { yoruba: "oru", igbo: "abalị", pidgin: "night", french: "nuit", spanish: "noche" },
+  morning: { yoruba: "àárọ̀", igbo: "ụtụtụ", pidgin: "morning", french: "matin", spanish: "mañana" },
+  evening: { yoruba: "írọlẹ́", igbo: "mbede", pidgin: "evening", french: "soir", spanish: "tarde" },
+  fire: { yoruba: "ina", igbo: "ọkụ", pidgin: "fire", french: "feu", spanish: "fuego" },
+  sun: { yoruba: "oorun", igbo: "anyanwụ", pidgin: "sun", french: "soleil", spanish: "sol" },
+  moon: { yoruba: "osupa", igbo: "ọnwa", pidgin: "moon", french: "lune", spanish: "luna" },
+  star: { yoruba: "irawọ", igbo: "kpakpando", pidgin: "star", french: "étoile", spanish: "estrella" },
+  sky: { yoruba: "ọrun", igbo: "igwe", pidgin: "sky", french: "ciel", spanish: "cielo" },
+  rain: { yoruba: "ojo", igbo: "mmiri ozuzo", pidgin: "rain", french: "pluie", spanish: "lluvia" },
+  cloud: { yoruba: "awọsanma", igbo: "ugwu igwe", pidgin: "cloud", french: "nuage", spanish: "nube" },
+  wind: { yoruba: "afẹfẹ", igbo: "ikuku", pidgin: "wind", french: "vent", spanish: "viento" },
+  hospital: { yoruba: "ilé ìwòsàn", igbo: "ụlọ ọgwụ", pidgin: "hospital", french: "hôpital", spanish: "hospital" },
+market: { yoruba: "ọjà", igbo: "ahịa", pidgin: "market", french: "marché", spanish: "mercado" },
+church: { yoruba: "ṣọ́ọ̀ṣì", igbo: "ụka", pidgin: "church", french: "église", spanish: "iglesia" },
+mosque: { yoruba: "masalasi", igbo: "ụlọ ekpere", pidgin: "mosque", french: "mosquée", spanish: "mezquita" },
+school: { yoruba: "ilé-ẹ̀kọ́", igbo: "ụlọ akwụkwọ", pidgin: "school", french: "école", spanish: "escuela" },
+shop: { yoruba: "ṣọ́ọ̀bù", igbo: "ụlọ ahịa", pidgin: "shop", french: "boutique", spanish: "tienda" },
+village: { yoruba: "abúlé", igbo: "obodo nta", pidgin: "village", french: "village", spanish: "pueblo" },
+city: { yoruba: "ìlú", igbo: "obodo", pidgin: "city", french: "ville", spanish: "ciudad" },
+farm: { yoruba: "oko", igbo: "ugbo", pidgin: "farm", french: "ferme", spanish: "granja" },
+bank: { yoruba: "ilé ìfowópamọ́", igbo: "ụlọ akụ", pidgin: "bank", french: "banque", spanish: "banco" },
+airport: { yoruba: "pápá ọkọ òfurufú", igbo: "ọdụ ụgbọ elu", pidgin: "airport", french: "aéroport", spanish: "aeropuerto" },
+road: { yoruba: "ọ̀nà", igbo: "ụzọ", pidgin: "road", french: "route", spanish: "carretera" },
+bridge: { yoruba: "àkọ́kọ́", igbo: "kọlụ", pidgin: "bridge", french: "pont", spanish: "puente" },
+house: { yoruba: "ilé", igbo: "ụlọ", pidgin: "house", french: "maison", spanish: "casa" }, // already added before, just included for context
+kitchen: { yoruba: "ìdáná", igbo: "ụlọ esi nri", pidgin: "kitchen", french: "cuisine", spanish: "cocina" },
+toilet: { yoruba: "ibi ìgbónsẹ̀", igbo: "ụlọ mposi", pidgin: "toilet", french: "toilettes", spanish: "baño" },
+bathroom: { yoruba: "yàrá ìwẹ̀", igbo: "ụlọ ịsa ahụ", pidgin: "bathroom", french: "salle de bain", spanish: "baño" },
+room: { yoruba: "yàrá", igbo: "ụlọ", pidgin: "room", french: "chambre", spanish: "habitación" },
+cinema: { yoruba: "sinima", igbo: "sinima", pidgin: "cinema", french: "cinéma", spanish: "cine" },
+office: { yoruba: "ọ́fíìsì", igbo: "ụlọ ọrụ", pidgin: "office", french: "bureau", spanish: "oficina" }
+};
+
+    function translateWord() {
+      const language = document.getElementById("language").value;
+      const word = document.getElementById("wordInput").value.toLowerCase().trim();
+      const result = document.getElementById("result");
+
+      if (dictionary[word] && dictionary[word][language]) {
+        result.textContent = dictionary[word][language];
+      } else {
+        result.textContent = "Translation not found";
+      }
+    }
+  </script>
+</body>
+</html>
